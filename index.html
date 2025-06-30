@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digital E Gram Panchayat</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="js/script.js" defer></script>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-content">
+        <div class="logo">🏛️ Digital E Gram Panchayat</div>
+        <div class="nav-buttons" id="navButtons">
+          <button class="btn btn-secondary" onclick="openModal('loginModal')">
+            Login
+          </button>
+          <button class="btn btn-primary" onclick="openModal('registerModal')">
+            Register
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero" id="heroSection">
+      <div class="container">
+        <h1>Empowering Villages Through Digital Governance</h1>
+        <p>
+          Access government services, track applications, and connect with your
+          local panchayat online
+        </p>
+
+        <div class="features">
+          <div class="feature-card">
+            <div class="feature-icon">📋</div>
+            <h3>Online Applications</h3>
+            <p>
+              Submit applications for various government services from the
+              comfort of your home
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Track Progress</h3>
+            <p>
+              Monitor the status of your applications in real-time with our
+              tracking system
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🏛️</div>
+            <h3>Government Services</h3>
+            <p>
+              Access all gram panchayat services and schemes through a single
+              platform
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Dashboard -->
+    <div class="dashboard" id="userDashboard">
+      <div class="container">
+        <div class="dashboard-header">
+          <h2>User Dashboard</h2>
+          <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+        <div class="dashboard-content">
+          <div class="dashboard-card">
+            <h3>Available Services</h3>
+            <div id="servicesList"></div>
+            <button class="btn btn-primary" onclick="openModal('applyModal')">
+              Apply for Service
+            </button>
+          </div>
+          <div class="dashboard-card">
+            <h3>My Applications</h3>
+            <div id="myApplications"></div>
+          </div>
+          <div class="dashboard-card">
+            <h3>My Profile</h3>
+            <div id="userProfile"></div>
+            <button
+              class="btn btn-secondary btn-small"
+              onclick="openModal('profileModal')"
+            >
+              Edit Profile
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Officer Dashboard -->
+    <div class="dashboard" id="officerDashboard">
+      <div class="container">
+        <div class="dashboard-header">
+          <h2>Officer Dashboard</h2>
+          <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+        <div class="dashboard-content">
+          <div class="dashboard-card">
+            <h3>Manage Services</h3>
+            <button
+              class="btn btn-primary btn-small"
+              onclick="openModal('createServiceModal')"
+            >
+              Create Service
+            </button>
+            <div id="adminServicesList"></div>
+          </div>
+          <div class="dashboard-card">
+            <h3>Applications Management</h3>
+            <div id="allApplications"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Staff Dashboard -->
+    <div class="dashboard" id="staffDashboard">
+      <div class="container">
+        <div class="dashboard-header">
+          <h2>Staff Dashboard</h2>
+          <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+        <div class="dashboard-content">
+          <div class="dashboard-card">
+            <h3>View Services</h3>
+            <div id="staffServicesList"></div>
+          </div>
+          <div class="dashboard-card">
+            <h3>Application Status Updates</h3>
+            <div id="staffApplications"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('loginModal')"
+          >&times;</span
+        >
+        <h2>Login</h2>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">Email:</label>
+            <input type="email" id="loginEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password:</label>
+            <input type="password" id="loginPassword" required />
+          </div>
+          <div class="form-group">
+            <label for="userType">User Type:</label>
+            <select id="userType" required>
+              <option value="">Select User Type</option>
+              <option value="user">Citizen</option>
+              <option value="staff">Staff</option>
+              <option value="officer">Officer/Admin</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%">
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('registerModal')"
+          >&times;</span
+        >
+        <h2>Register</h2>
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="registerName">Full Name:</label>
+            <input type="text" id="registerName" required />
+          </div>
+          <div class="form-group">
+            <label for="registerEmail">Email:</label>
+            <input type="email" id="registerEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="registerPassword">Password:</label>
+            <input type="password" id="registerPassword" required />
+          </div>
+          <div class="form-group">
+            <label for="registerPhone">Phone Number:</label>
+            <input type="tel" id="registerPhone" required />
+          </div>
+          <div class="form-group">
+            <label for="registerAddress">Address:</label>
+            <textarea id="registerAddress" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%">
+            Register
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Apply for Service Modal -->
+    <div class="modal" id="applyModal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('applyModal')"
+          >&times;</span
+        >
+        <h2>Apply for Service</h2>
+        <form id="applyForm">
+          <div class="form-group">
+            <label for="serviceSelect">Select Service:</label>
+            <select id="serviceSelect" required></select>
+          </div>
+          <div class="form-group">
+            <label for="applicationReason">Reason/Details:</label>
+            <textarea id="applicationReason" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="urgency">Priority Level:</label>
+            <select id="urgency" required>
+              <option value="normal">Normal</option>
+              <option value="urgent">Urgent</option>
+              <option value="emergency">Emergency</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%">
+            Submit Application
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Create Service Modal -->
+    <div class="modal" id="createServiceModal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('createServiceModal')"
+          >&times;</span
+        >
+        <h2>Create New Service</h2>
+        <form id="createServiceForm">
+          <div class="form-group">
+            <label for="serviceName">Service Name:</label>
+            <input type="text" id="serviceName" required />
+          </div>
+          <div class="form-group">
+            <label for="serviceDescription">Description:</label>
+            <textarea id="serviceDescription" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="serviceCategory">Category:</label>
+            <select id="serviceCategory" required>
+              <option value="">Select Category</option>
+              <option value="certificates">Certificates</option>
+              <option value="licenses">Licenses</option>
+              <option value="welfare">Welfare Schemes</option>
+              <option value="infrastructure">Infrastructure</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="processingTime">Expected Processing Time:</label>
+            <input
+              type="text"
+              id="processingTime"
+              placeholder="e.g., 7-10 days"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%">
+            Create Service
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Profile Edit Modal -->
+    <div class="modal" id="profileModal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('profileModal')"
+          >&times;</span
+        >
+        <h2>Edit Profile</h2>
+        <form id="profileForm">
+          <div class="form-group">
+            <label for="profileName">Full Name:</label>
+            <input type="text" id="profileName" required />
+          </div>
+          <div class="form-group">
+            <label for="profilePhone">Phone Number:</label>
+            <input type="tel" id="profilePhone" required />
+          </div>
+          <div class="form-group">
+            <label for="profileAddress">Address:</label>
+            <textarea id="profileAddress" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%">
+            Update Profile
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
