@@ -48,7 +48,7 @@ A comprehensive web application designed to digitize and streamline the services
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/pankajsirotha/e_panchayat.git
+   git clone https://github.com/pankajsirotha/E_Panchayat.git
    ```
 
 2. **Navigate to the project directory:**

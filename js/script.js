@@ -66,6 +66,15 @@ class MockFirebase {
           phone: "9876543211",
           address: "Panchayat Office",
         },
+        {
+          id: "citizen_001",
+          name: "Citizen",
+          email: "citizen@example.com",
+          password: "citizen123",
+          type: "citizen",
+          phone: "9876543212",
+          address: "Ward 1, Village",
+        },
       ];
       this.saveData();
     }
@@ -969,8 +978,10 @@ function updateOfficerStaffStats() {
       staffApplications;
   }
 }
+showNotification("Check console for Demo Credentials");
 
 console.log("Digital E Gram Panchayat System Initialized");
 console.log("Demo Credentials:");
 console.log("Officer: admin@panchayat.gov.in / admin123");
 console.log("Staff: staff@panchayat.gov.in / staff123");
+console.log("Citizen: citizen@example.com / citizen123");
