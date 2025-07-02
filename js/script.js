@@ -483,11 +483,83 @@ function addRemarks(applicationId) {
 }
 
 function editService(serviceId) {
-  showNotification(
-    "Edit service functionality would be implemented here",
-    "success"
-  );
+  const service = firebase.getServices().find((s) => s.id === serviceId);
+  if (!service) return;
+
+  // Open the createServiceModal for editing
+  openModal("createServiceModal");
+  document.getElementById("serviceName").value = service.name;
+  document.getElementById("serviceDescription").value = service.description;
+  document.getElementById("serviceCategory").value = service.category;
+  document.getElementById("processingTime").value = service.processingTime;
+
+  // Store editing state
+  document
+    .getElementById("createServiceForm")
+    .setAttribute("data-editing", serviceId);
+
+  // Change button text to "Update Service"
+  document.querySelector(
+    '#createServiceForm button[type="submit"]'
+  ).textContent = "Update Service";
 }
+// Update createServiceForm submit handler to handle edit
+document
+  .getElementById("createServiceForm")
+  .addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = document.getElementById("serviceName").value.trim();
+    const description = document
+      .getElementById("serviceDescription")
+      .value.trim();
+    const category = document.getElementById("serviceCategory").value;
+    const processingTime = document
+      .getElementById("processingTime")
+      .value.trim();
+    const fileInput = document.getElementById("serviceFiles");
+    let files = [];
+    if (fileInput && fileInput.files.length > 0) {
+      files = Array.from(fileInput.files).map((f) => f.name); // Just storing file names for mock
+    }
+
+    const editingId = document
+      .getElementById("createServiceForm")
+      .getAttribute("data-editing");
+
+    if (editingId) {
+      // Edit existing service
+      const service = firebase.getServices().find((s) => s.id === editingId);
+      if (service) {
+        service.name = name;
+        service.description = description;
+        service.category = category;
+        service.processingTime = processingTime;
+        service.files = files;
+        firebase.saveData();
+        showNotification("Service updated successfully!");
+      }
+      document
+        .getElementById("createServiceForm")
+        .removeAttribute("data-editing");
+      document.querySelector(
+        '#createServiceForm button[type="submit"]'
+      ).textContent = "Create Service";
+    } else {
+      // Create new service
+      await firebase.createService({
+        name,
+        description,
+        category,
+        processingTime,
+        files,
+      });
+      showNotification("Service created successfully!");
+    }
+
+    closeModal("createServiceModal");
+    document.getElementById("createServiceForm").reset();
+    loadServices();
+  });
 
 function deleteService(serviceId) {
   if (confirm("Are you sure you want to delete this service?")) {
@@ -548,28 +620,28 @@ document
     }
   });
 
-document
-  .getElementById("createServiceForm")
-  .addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const serviceData = {
-      name: document.getElementById("serviceName").value,
-      description: document.getElementById("serviceDescription").value,
-      category: document.getElementById("serviceCategory").value,
-      processingTime: document.getElementById("processingTime").value,
-    };
+// document
+//   .getElementById("createServiceForm")
+//   .addEventListener("submit", async (e) => {
+//     e.preventDefault();
+//     const serviceData = {
+//       name: document.getElementById("serviceName").value,
+//       description: document.getElementById("serviceDescription").value,
+//       category: document.getElementById("serviceCategory").value,
+//       processingTime: document.getElementById("processingTime").value,
+//     };
 
-    const result = await firebase.createService(serviceData);
+//     const result = await firebase.createService(serviceData);
 
-    if (result.success) {
-      showNotification("Service created successfully!");
-      closeModal("createServiceModal");
-      document.getElementById("createServiceForm").reset();
-      loadServices();
-    } else {
-      showNotification("Failed to create service", "error");
-    }
-  });
+//     if (result.success) {
+//       showNotification("Service created successfully!");
+//       closeModal("createServiceModal");
+//       document.getElementById("createServiceForm").reset();
+//       loadServices();
+//     } else {
+//       showNotification("Failed to create service", "error");
+//     }
+//   });
 
 document.getElementById("applyForm").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -726,7 +798,6 @@ function debounce(func, wait) {
 
 const debouncedSearch = debounce(searchServices, 300);
 
-// Add keyboard shortcuts
 document.addEventListener("keydown", (e) => {
   if (e.ctrlKey && e.key === "k") {
     e.preventDefault();
@@ -738,15 +809,166 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-// // Add notification for demo credentials
-// if (!firebase.currentUser) {
-//   setTimeout(() => {
-//     showNotification(
-//       "Demo: Officer login - admin@panchayat.gov.in / admin123, Staff login - staff@panchayat.gov.in / staff123",
-//       "success"
-//     );
-//   }, 2000);
-// }
+function updateUserStats() {
+  if (firebase.currentUser?.type === "user") {
+    const applications = firebase.getUserApplications();
+    const total = applications.length;
+    const pending = applications.filter(
+      (app) => app.status === "pending"
+    ).length;
+    const approved = applications.filter(
+      (app) => app.status === "approved"
+    ).length;
+
+    document.getElementById("userApplicationsCount").textContent = total;
+    document.getElementById("pendingApplicationsCount").textContent = pending;
+    document.getElementById("approvedApplicationsCount").textContent = approved;
+  }
+}
+
+function loadApplications() {
+  if (firebase.currentUser?.type === "user") {
+    const applications = firebase.getUserApplications();
+    const myApplications = document.getElementById("myApplications");
+    if (myApplications) {
+      myApplications.innerHTML = applications.length
+        ? applications
+            .map((app) => {
+              const service = firebase
+                .getServices()
+                .find((s) => s.id === app.serviceId);
+              // Show delete button if application is approved or rejected
+              const showDelete =
+                app.status === "approved" || app.status === "rejected";
+              return `
+                <div class="service-item">
+                  <h4>${service?.name || "Unknown Service"}</h4>
+                  <p><strong>Status:</strong> <span class="status-${
+                    app.status
+                  }">${app.status.toUpperCase()}</span></p>
+                  <p><strong>Applied:</strong> ${new Date(
+                    app.appliedAt
+                  ).toLocaleDateString()}</p>
+                  <p><strong>Reason:</strong> ${app.reason}</p>
+                  ${
+                    app.remarks
+                      ? `<p><strong>Remarks:</strong> ${app.remarks}</p>`
+                      : ""
+                  }
+                  ${
+                    showDelete
+                      ? `<button class="btn btn-danger btn-small" title="Delete" onclick="deleteApplication('${app.id}')">✖</button>`
+                      : ""
+                  }
+                </div>
+              `;
+            })
+            .join("")
+        : "<p>No applications found.</p>";
+    }
+    updateUserStats();
+  } else if (
+    firebase.currentUser?.type === "officer" ||
+    firebase.currentUser?.type === "staff"
+  ) {
+    const applications = firebase.getAllApplications();
+    const container =
+      firebase.currentUser.type === "officer"
+        ? document.getElementById("allApplications")
+        : document.getElementById("staffApplications");
+
+    if (container) {
+      container.innerHTML = applications.length
+        ? applications
+            .map((app) => {
+              const service = firebase
+                .getServices()
+                .find((s) => s.id === app.serviceId);
+              const user = firebase.data.users.find((u) => u.id === app.userId);
+              const showActions = app.status === "pending";
+              // Show delete button if application is approved or rejected
+              const showDelete =
+                app.status === "approved" || app.status === "rejected";
+              return `
+                <div class="service-item">
+                  <h4>${service?.name || "Unknown Service"}</h4>
+                  <p><strong>Applicant:</strong> ${
+                    user?.name || "Unknown User"
+                  }</p>
+                  <p><strong>Status:</strong> <span class="status-${
+                    app.status
+                  }">${app.status.toUpperCase()}</span></p>
+                  <p><strong>Applied:</strong> ${new Date(
+                    app.appliedAt
+                  ).toLocaleDateString()}</p>
+                  <p><strong>Reason:</strong> ${app.reason}</p>
+                  <p><strong>Priority:</strong> ${app.urgency}</p>
+                  ${
+                    app.remarks
+                      ? `<p><strong>Remarks:</strong> ${app.remarks}</p>`
+                      : ""
+                  }
+                  ${
+                    showActions
+                      ? `<div class="service-actions">
+                          <button class="btn btn-primary btn-small" onclick="updateStatus('${app.id}', 'approved')">Approve</button>
+                          <button class="btn btn-secondary btn-small" onclick="updateStatus('${app.id}', 'rejected')">Reject</button>
+                          <button class="btn btn-secondary btn-small" onclick="addRemarks('${app.id}')">Add Remarks</button>
+                        </div>`
+                      : ""
+                  }
+                  ${
+                    showDelete
+                      ? `<button class="btn btn-danger btn-small" title="Delete" onclick="deleteApplication('${app.id}')">✖</button>`
+                      : ""
+                  }
+                </div>
+              `;
+            })
+            .join("")
+        : "<p>No applications found.</p>";
+    }
+    updateOfficerStaffStats();
+  }
+}
+
+// Add this function to handle deleting an application
+function deleteApplication(appId) {
+  if (confirm("Are you sure you want to delete this application?")) {
+    // Remove from data
+    firebase.data.applications = firebase.data.applications.filter(
+      (a) => a.id !== appId
+    );
+    firebase.saveData();
+    showNotification("Application deleted successfully!");
+    loadApplications();
+  }
+}
+
+// Update stats for officer and staff dashboards
+function updateOfficerStaffStats() {
+  // Officer Dashboard
+  if (firebase.currentUser?.type === "officer") {
+    const totalServices = firebase.getServices().length;
+    const totalApplications = firebase.getAllApplications().length;
+    const pendingReview = firebase
+      .getAllApplications()
+      .filter((a) => a.status === "pending").length;
+
+    document.getElementById("totalServicesCount").textContent = totalServices;
+    document.getElementById("totalApplicationsCount").textContent =
+      totalApplications;
+    document.getElementById("pendingReviewCount").textContent = pendingReview;
+  }
+  // Staff Dashboard
+  if (firebase.currentUser?.type === "staff") {
+    const staffServices = firebase.getServices().length;
+    const staffApplications = firebase.getAllApplications().length;
+    document.getElementById("staffServicesCount").textContent = staffServices;
+    document.getElementById("staffApplicationsCount").textContent =
+      staffApplications;
+  }
+}
 
 console.log("Digital E Gram Panchayat System Initialized");
 console.log("Demo Credentials:");

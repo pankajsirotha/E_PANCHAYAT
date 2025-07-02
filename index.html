@@ -4,20 +4,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Digital E Gram Panchayat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="css/styles.css" />
     <script src="js/script.js" defer></script>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
   </head>
   <body>
+    <!-- Animated Background Particles -->
+    <div class="particle-bg" id="particles"></div>
+
     <!-- Navigation -->
     <nav class="navbar">
       <div class="nav-content">
-        <div class="logo">🏛️ Digital E Gram Panchayat</div>
+        <div class="logo">Digital E Gram Panchayat</div>
         <div class="nav-buttons" id="navButtons">
           <button class="btn btn-secondary" onclick="openModal('loginModal')">
-            Login
+            🔐 Login
           </button>
           <button class="btn btn-primary" onclick="openModal('registerModal')">
-            Register
+            📝 Register
           </button>
         </div>
       </div>
@@ -29,7 +39,7 @@
         <h1>Empowering Villages Through Digital Governance</h1>
         <p>
           Access government services, track applications, and connect with your
-          local panchayat online
+          local panchayat through our advanced digital platform
         </p>
 
         <div class="features">
@@ -38,23 +48,23 @@
             <h3>Online Applications</h3>
             <p>
               Submit applications for various government services from the
-              comfort of your home
+              comfort of your home with our streamlined digital process
             </p>
           </div>
           <div class="feature-card">
             <div class="feature-icon">📊</div>
-            <h3>Track Progress</h3>
+            <h3>Real-time Tracking</h3>
             <p>
               Monitor the status of your applications in real-time with our
-              tracking system
+              advanced tracking system and receive instant notifications
             </p>
           </div>
           <div class="feature-card">
             <div class="feature-icon">🏛️</div>
-            <h3>Government Services</h3>
+            <h3>Comprehensive Services</h3>
             <p>
-              Access all gram panchayat services and schemes through a single
-              platform
+              Access all gram panchayat services and government schemes through
+              a single, unified digital platform
             </p>
           </div>
         </div>
@@ -65,29 +75,47 @@
     <div class="dashboard" id="userDashboard">
       <div class="container">
         <div class="dashboard-header">
-          <h2>User Dashboard</h2>
-          <button class="btn btn-secondary" onclick="logout()">Logout</button>
+          <h2>👤 User Dashboard</h2>
+          <button class="btn btn-secondary" onclick="logout()">
+            ⚠️ Logout
+          </button>
         </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-number" id="userApplicationsCount">0</span>
+            <div class="stat-label">Total Applications</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" id="pendingApplicationsCount">0</span>
+            <div class="stat-label">Pending</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" id="approvedApplicationsCount">0</span>
+            <div class="stat-label">Approved</div>
+          </div>
+        </div>
+
         <div class="dashboard-content">
           <div class="dashboard-card">
-            <h3>Available Services</h3>
+            <h3>🎯 Available Services</h3>
             <div id="servicesList"></div>
             <button class="btn btn-primary" onclick="openModal('applyModal')">
-              Apply for Service
+              ➕ Apply for Service
             </button>
           </div>
           <div class="dashboard-card">
-            <h3>My Applications</h3>
+            <h3>📄 My Applications</h3>
             <div id="myApplications"></div>
           </div>
           <div class="dashboard-card">
-            <h3>My Profile</h3>
+            <h3>👤 My Profile</h3>
             <div id="userProfile"></div>
             <button
               class="btn btn-secondary btn-small"
-              onclick="openModal('profileModal')"
+              onclick="openProfileModal()"
             >
-              Edit Profile
+              ✏️ Edit Profile
             </button>
           </div>
         </div>
@@ -98,22 +126,40 @@
     <div class="dashboard" id="officerDashboard">
       <div class="container">
         <div class="dashboard-header">
-          <h2>Officer Dashboard</h2>
-          <button class="btn btn-secondary" onclick="logout()">Logout</button>
+          <h2>👨‍💼 Officer Dashboard</h2>
+          <button class="btn btn-secondary" onclick="logout()">
+            ⚠️ Logout
+          </button>
         </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-number" id="totalServicesCount">0</span>
+            <div class="stat-label">Total Services</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" id="totalApplicationsCount">0</span>
+            <div class="stat-label">Total Applications</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" id="pendingReviewCount">0</span>
+            <div class="stat-label">Pending Review</div>
+          </div>
+        </div>
+
         <div class="dashboard-content">
           <div class="dashboard-card">
-            <h3>Manage Services</h3>
+            <h3>⚙️ Manage Services</h3>
             <button
-              class="btn btn-primary btn-small"
+              class="btn btn-primary btn-small create_service-btn"
               onclick="openModal('createServiceModal')"
             >
-              Create Service
+              ➕ Create Service
             </button>
             <div id="adminServicesList"></div>
           </div>
           <div class="dashboard-card">
-            <h3>Applications Management</h3>
+            <h3>📋 Applications Management</h3>
             <div id="allApplications"></div>
           </div>
         </div>
@@ -124,16 +170,30 @@
     <div class="dashboard" id="staffDashboard">
       <div class="container">
         <div class="dashboard-header">
-          <h2>Staff Dashboard</h2>
-          <button class="btn btn-secondary" onclick="logout()">Logout</button>
+          <h2>👩‍💻 Staff Dashboard</h2>
+          <button class="btn btn-secondary" onclick="logout()">
+            ⚠️ Logout
+          </button>
         </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-number" id="staffServicesCount">0</span>
+            <div class="stat-label">Available Services</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" id="staffApplicationsCount">0</span>
+            <div class="stat-label">Applications</div>
+          </div>
+        </div>
+
         <div class="dashboard-content">
           <div class="dashboard-card">
-            <h3>View Services</h3>
+            <h3>📋 View Services</h3>
             <div id="staffServicesList"></div>
           </div>
           <div class="dashboard-card">
-            <h3>Application Status Updates</h3>
+            <h3>🔄 Application Status Updates</h3>
             <div id="staffApplications"></div>
           </div>
         </div>
@@ -146,27 +206,37 @@
         <span class="close-btn" onclick="closeModal('loginModal')"
           >&times;</span
         >
-        <h2>Login</h2>
+        <h2>🔐 Login</h2>
         <form id="loginForm">
           <div class="form-group">
-            <label for="loginEmail">Email:</label>
-            <input type="email" id="loginEmail" required />
+            <label for="loginEmail">📧 Email:</label>
+            <input
+              type="email"
+              id="loginEmail"
+              required
+              placeholder="Enter your email"
+            />
           </div>
           <div class="form-group">
-            <label for="loginPassword">Password:</label>
-            <input type="password" id="loginPassword" required />
+            <label for="loginPassword">🔒 Password:</label>
+            <input
+              type="password"
+              id="loginPassword"
+              required
+              placeholder="Enter your password"
+            />
           </div>
           <div class="form-group">
-            <label for="userType">User Type:</label>
+            <label for="userType">👤 User Type:</label>
             <select id="userType" required>
               <option value="">Select User Type</option>
-              <option value="user">Citizen</option>
-              <option value="staff">Staff</option>
-              <option value="officer">Officer/Admin</option>
+              <option value="user">🏠 Citizen</option>
+              <option value="staff">👩‍💻 Staff</option>
+              <option value="officer">👨‍💼 Officer/Admin</option>
             </select>
           </div>
           <button type="submit" class="btn btn-primary" style="width: 100%">
-            Login
+            🚀 Login
           </button>
         </form>
       </div>
@@ -178,30 +248,54 @@
         <span class="close-btn" onclick="closeModal('registerModal')"
           >&times;</span
         >
-        <h2>Register</h2>
+        <h2>📝 Register</h2>
         <form id="registerForm">
           <div class="form-group">
-            <label for="registerName">Full Name:</label>
-            <input type="text" id="registerName" required />
+            <label for="registerName">👤 Full Name:</label>
+            <input
+              type="text"
+              id="registerName"
+              required
+              placeholder="Enter your full name"
+            />
           </div>
           <div class="form-group">
-            <label for="registerEmail">Email:</label>
-            <input type="email" id="registerEmail" required />
+            <label for="registerEmail">📧 Email:</label>
+            <input
+              type="email"
+              id="registerEmail"
+              required
+              placeholder="Enter your email"
+            />
           </div>
           <div class="form-group">
-            <label for="registerPassword">Password:</label>
-            <input type="password" id="registerPassword" required />
+            <label for="registerPassword">🔒 Password:</label>
+            <input
+              type="password"
+              id="registerPassword"
+              required
+              placeholder="Create a password"
+            />
           </div>
           <div class="form-group">
-            <label for="registerPhone">Phone Number:</label>
-            <input type="tel" id="registerPhone" required />
+            <label for="registerPhone">📱 Phone Number:</label>
+            <input
+              type="tel"
+              id="registerPhone"
+              required
+              placeholder="Enter your phone number"
+            />
           </div>
           <div class="form-group">
-            <label for="registerAddress">Address:</label>
-            <textarea id="registerAddress" required></textarea>
+            <label for="registerAddress">🏠 Address:</label>
+            <textarea
+              id="registerAddress"
+              required
+              placeholder="Enter your address"
+            ></textarea>
           </div>
           <button type="submit" class="btn btn-primary" style="width: 100%">
-            Register
+            ✨ Register
           </button>
         </form>
       </div>
@@ -230,6 +324,10 @@
               <option value="urgent">Urgent</option>
               <option value="emergency">Emergency</option>
             </select>
+          </div>
+          <div class="form-group">
+            <label for="serviceFiles">Attach Files (optional):</label>
+            <input type="file" id="serviceFiles" multiple />
           </div>
           <button type="submit" class="btn btn-primary" style="width: 100%">
             Submit Application
