@@ -71,7 +71,7 @@ class MockFirebase {
           name: "Citizen",
           email: "citizen@example.com",
           password: "citizen123",
-          type: "citizen",
+          type: "user",
           phone: "9876543212",
           address: "Ward 1, Village",
         },
