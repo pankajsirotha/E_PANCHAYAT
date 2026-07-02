@@ -6,6 +6,14 @@ A comprehensive web application designed to digitize and streamline the services
 ## View
 Link: https://pankajsirotha.github.io/E_PANCHAYAT/
 
+Login Cred: 
+
+Officer: admin@panchayat.gov.in / admin123
+
+Staff: staff@panchayat.gov.in / staff123
+
+Citizen: citizen@example.com / citizen123
+
 ## Features
 
 ### For Citizens
