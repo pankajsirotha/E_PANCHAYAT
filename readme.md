@@ -3,6 +3,8 @@
 A comprehensive web application designed to digitize and streamline the services of a Gram Panchayat. Citizens, staff, and officers can access, manage, and track government services and applications through a unified digital platform.
 
 ---
+## View
+Link: https://pankajsirotha.github.io/E_PANCHAYAT/
 
 ## Features
 
